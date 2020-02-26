@@ -47,10 +47,6 @@ def run(url):
             if criticChunk:
                 critic = criticChunk.text.strip()
 
-            # ratingChunk = review.find(
-            #     "div", {"class": re.compile("review_icon")})
-            # if ratingChunk:
-            #     rating = ratingChunk.text.strip()
             ratingChunk = review.find(
                 'div', {"class": re.compile("review_icon")}).attrs
             rating = ratingChunk['class'][3]
