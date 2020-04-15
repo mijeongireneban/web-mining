@@ -1,9 +1,8 @@
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score
 import os
+import tensorflow as tf
+from keras import models
+from keras import layers
+from keras import optimizers
 
 
 def getlabel(x):
@@ -59,20 +58,20 @@ def loaddata(parent_dir):
 
 test_news, test_label, train_news, train_label = loaddata('./20_newsgroups')
 
-# counter = CountVectorizer()
-# counter.fit(train_news)
-counter = TfidfVectorizer()
-counter.fit(train_news)
+d1 = 500
+d2 = 500
 
-counts_train = counter.transform(train_news)
-counts_test = counter.transform(test_news)
+model = models.Sequential()
+model.add(layers.Dense(d1, activation='relu', input_shape=(1,)))
+model.add(layers.Dense(d2, activation='relu'))
+model.add(layers.Dense(10, activation='softmax'))
 
-# clf = MultinomialNB()
-clf = MLPClassifier(activation='tanh', solver='sgd',
-                    learning_rate='invscaling')
+model.summary()
 
-clf.fit(counts_train, train_label)
+model.compile(optimizers.RMSprop(lr=0.0001),
+              loss='categorical_crossentropy', metrics=['accuracy'])
+history = model.fit(train_news, train_label, batch_size=128
+                    )
 
-pred = clf.predict(counts_test)
-
-print(accuracy_score(pred, test_label))
+loss_and_acc = model.evaluate(test_news, test_label)
+print(str(loss_and_acc[1]))
