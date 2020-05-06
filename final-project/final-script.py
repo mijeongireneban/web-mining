@@ -6,23 +6,19 @@ from keras.layers import Dense, Embedding, LSTM, Bidirectional
 from keras import optimizers
 
 # Variables for paths
-path_train = './datasets/'
-path_test = './test-data.txt'  # change test dataset file name
+path_test = './test-data.txt'  # ******change test dataset file name******
 
 # Load Training Data
 x_train = []
 y_train = []
-for i, j, k in os.walk(path_train):
-    for file in k:
-        if (file.endswith('.txt')):
-            paths = path_train + file
-            f = open(paths)
-            for line in f:
-                if (len(line.strip().split('\t')) == 2):
-                    review, target = line.strip().split('\t')
-                    x_train.append(review.lower())
-                    y_train.append(int(target[0]))
-            f.close()
+
+f = open("training-datasets.txt")
+for line in f:
+    if (len(line.strip().split('\t')) == 2):
+        review, target = line.strip().split('\t')
+        x_train.append(review.lower())
+        y_train.append(int(target[0]))
+f.close()
 
 print("The size of training dataset is " + str(len(x_train)))
 
